@@ -15,13 +15,6 @@
 		var switchToAlgorithmZConstant = 22;
 
 		function _Reservoir(reservoirSize, randomNumberGen) {
-/*
-			if(Object.prototype.toString.call(targetArray) !== "[object Array]") {
-				randomNumberGen = reservoirSize;
-				reservoirSize = targetArray;
-				targetArray = [];
-			}
-*/
 			var targetArray = [];
 			var rng = randomNumberGen || Math.random;
 			var reservoirSize =
@@ -35,9 +28,12 @@
 			var W = Math.exp(-Math.log(rng()) / reservoirSize);
 
 			targetArray.pushSome = function() {
+				this.length = Math.min(this.length, reservoirSize);
+
 				for(var i = 0; i < arguments.length; i++) {
 					addSample.call(this, arguments[i]);
 				}
+
 				return this.length;
 			};
 
@@ -57,33 +53,6 @@
 				totalItemCount++;
 				return this;
 			};
-
-/*
-			this.addSamplesFromIterator = function(iterator) {
-				try {
-					// Prefill the reservoir if it isn't full
-					while(totalItemCount < reservoirSize) {
-						this.push(skipIterations(iterator));
-					}
-					while(true) {
-						if(numToSkip < 0) {
-							numToSkip = currentAlgorithm();
-						}
-						skipIterationsAndReplace(iterator, this);
-					}
-				} catch(e) {
-					if (typeof StopIteration === "undefined") {
-						if(!e.message.match('StopIteration')) {
-							throw e;
-						}
-					} else if (e !== StopIteration) {
-						// Mozilla defines StopIteration, others do not
-						throw e;
-					}
-				}
-				return this;
-			};
-*/
 
 			function skipIterations(iterator) {
 				var sample;
