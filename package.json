@@ -1,0 +1,35 @@
+{
+  "name": "reservoir",
+  "version": "0.1.0",
+  "description": "Fast random sampling using reservoir sampling",
+  "main": "reservoir.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/imbcmdth/reservoir.git"
+  },
+  "keywords": [
+    "reservoir",
+    "sampling",
+    "iterator"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "vows" : ">=0.6.3"
+  },
+  "author": {
+    "name": "Jon-Carlos Rivera",
+    "email": "jon.carlos.rivera@gmail.com",
+    "url": "http://jon-carlos.com"
+  },
+  "scripts": {
+    "test": "vows test/*.js"
+  },
+  "license": "MIT",
+  "engine": {
+    "node": ">=0.6.0"
+  }
+}
