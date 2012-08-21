@@ -50,8 +50,8 @@
 				currentAlgorithm = algorithmZ;
 			}
 
-			// `algorithmXCount` is used in both X and Z and represents the
-			// number of items processed by algorithm X minus reservoirSize
+			// `algorithmXCount` is the number of items processed by algorithmX
+			//  ie. the `totalItemCount` minus `reservoirSize`
 			var algorithmXCount = 0;
 
 			// `W` is used in algorithmZ
