@@ -5,13 +5,13 @@ Quickly generate a random subset of arrays, iterators, or streams with [reservoi
 
 For *Node.js*, use `npm`:
 
-````
+````console
 npm install reservoir
 ````
 
 For the *browser*, add the following to your pages:
 
-````
+````html
 <script src="reservoir.js"></script>
 ````
 
@@ -33,7 +33,7 @@ var myReservoir = Reservoir(3);
 
 Within a *browser*:
 ````javascript
-var myReservour = Reservoir(3); 
+var myReservoir = Reservoir(3); 
 ````
 
 Now, using that new reservoir we begin to add items into it:
@@ -49,7 +49,7 @@ myData.forEach(function(e){
 At this point, `myReservoir` will contain example 3 randomly-chosen values from the array `myData`:
 
 ````javascript
-myReservour => [2, 4, 7] // This can be any random subset of myData
+myReservoir => [2, 4, 7] // This can be any random subset of myData
 ````
 
 ### Intermediate
@@ -60,10 +60,13 @@ Since, `Reservoir.pushSome` operates much like the real `Array.push` we can pass
 myReservoir.pushSome.apply(myReservoir, myData);
 ````
 
-As we said before, the object returned from Reservoir() is just an array *decorated* with a `pushSome` function. That means that all normal array functions are available. Particually valuable are the iterator functions `forEach`, `map`, 
+One important property of the Reservoir is that the data it contains will always be in the same order as the data of which it is a subset.
+
+Since the object returned from Reservoir() is just an array *decorated* with a `pushSome` function, all normal array functions are available. Particularly of value are the iterator functions: `forEach`, `filter, `map`, `every`, `some`, `reduce`, and `reduceRight`.
 
 ### Advanced
 
+TODO: Advanced usage (ie. see `Some`).
 
 ## API
 
