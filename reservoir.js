@@ -15,7 +15,7 @@
 		var switchToAlgorithmZConstant = 22;
 
 		// `debug` was used to test for correctness of the more complicated
-		// algorithms, X and Z, by comparing their results to R
+		// algorithms, X and Z, by comparing their results to baseline R
 		var debug = "none";
 
 		function _Reservoir(reservoirSize, randomNumberGen) {
