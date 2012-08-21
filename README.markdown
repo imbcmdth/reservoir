@@ -25,20 +25,20 @@ To create an empty reservoir that will contain a *maximum* of 3 randomly-chosen 
 
 Within *Node.js*:
 
-````
+````javascript
 var Reservoir = require('reservoir');
 
 var myReservoir = Reservoir(3);
 ````
 
 Within a *browser*:
-````
+````javascript
 var myReservour = Reservoir(3); 
 ````
 
 Now, using that new reservoir we begin to add items into it:
 
-````
+````javascript
 var myData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 myData.forEach(function(e){
@@ -48,7 +48,7 @@ myData.forEach(function(e){
 
 At this point, `myReservoir` will contain example 3 randomly-chosen values from the array `myData`:
 
-````
+````javascript
 myReservour => [2, 4, 7] // This can be any random subset of myData
 ````
 
@@ -56,7 +56,7 @@ myReservour => [2, 4, 7] // This can be any random subset of myData
 
 Since, `Reservoir.pushSome` operates much like the real `Array.push` we can pass `pushSome` more than one parameter and each one will be pushed in order. That means we can make the previous example more succinct by using `Function.apply`:
 
-````
+````javascript
 myReservoir.pushSome.apply(myReservoir, myData);
 ````
 
@@ -87,4 +87,4 @@ An empty Reservoir (an Array with the function `pushSome` added to it).
 
 #### Returns 
 
-A number representing the current length of the reservoir.
+The current length of the reservoir.
