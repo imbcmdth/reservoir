@@ -3,16 +3,36 @@ A simple JavaScript library for quickly generating a random subset of arrays, it
 
 ## Installation
 
+### Node.js
+
 For *Node.js*, use `npm`:
 
 ````console
 npm install reservoir
 ````
 
+..then `require` Reservoir:
+
+````javascript
+var Reservoir = require('reservoir');
+````
+
+### In the browser, traditional
+
 For the *browser*, add the following to your pages:
 
 ````html
 <script src="reservoir.js"></script>
+````
+
+### In the browser, using AMD (require.js)
+
+...Or using AMD in the browser:
+
+````javascript
+require(["reservoir/reservoir"], function(Reservoir) {
+	// ...
+});
 ````
 
 ## Usage
@@ -23,15 +43,6 @@ A reservoir is just an array with one very special function added - `pushSome`.
 
 To create an empty reservoir that will contain a *maximum* of 3 randomly-chosen items:
 
-Within *Node.js*:
-
-````javascript
-var Reservoir = require('reservoir');
-
-var myReservoir = Reservoir(3);
-````
-
-Within a *browser*:
 ````javascript
 var myReservoir = Reservoir(3); 
 ````
@@ -62,7 +73,7 @@ Since, `Reservoir.pushSome` operates much like the real `Array.push` we can pass
 myReservoir.pushSome.apply(myReservoir, myData);
 ````
 
-Since the object returned from Reservoir() is just an array *decorated* with a `pushSome` function, all normal array functions are available. Particularly of value are the iterator functions: `forEach`, `filter, `map`, `every`, `some`, `reduce`, and `reduceRight`.
+Since the object returned from Reservoir() is just an array *decorated* with a `pushSome` function, all normal array functions are available. Particularly of value are the iterator functions: `forEach`, `filter`, `map`, `every`, `some`, `reduce`, and `reduceRight`.
 
 ### Advanced
 
