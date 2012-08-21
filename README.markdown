@@ -1,5 +1,5 @@
-# Reservoir.js
-Quickly generate a random subset of arrays, iterators, or streams with [reservoir sampling](http://en.wikipedia.org/wiki/Reservoir_sampling).
+# Reservoir
+A simple JavaScript library for quickly generating a random subset of arrays, iterators, or streams with [reservoir sampling](http://en.wikipedia.org/wiki/Reservoir_sampling).
 
 ## Installation
 
@@ -52,6 +52,8 @@ At this point, `myReservoir` will contain example 3 randomly-chosen values from 
 myReservoir => [2, 4, 7] // This can be any random subset of myData
 ````
 
+As we can see, one important property of the Reservoir is that the order of the input is preserved.
+
 ### Intermediate
 
 Since, `Reservoir.pushSome` operates much like the real `Array.push` we can pass `pushSome` more than one parameter and each one will be pushed in order. That means we can make the previous example more succinct by using `Function.apply`:
@@ -59,8 +61,6 @@ Since, `Reservoir.pushSome` operates much like the real `Array.push` we can pass
 ````javascript
 myReservoir.pushSome.apply(myReservoir, myData);
 ````
-
-One important property of the Reservoir is that the data it contains will always be in the same order as the data of which it is a subset.
 
 Since the object returned from Reservoir() is just an array *decorated* with a `pushSome` function, all normal array functions are available. Particularly of value are the iterator functions: `forEach`, `filter, `map`, `every`, `some`, `reduce`, and `reduceRight`.
 
@@ -91,3 +91,15 @@ An empty Reservoir (an Array with the function `pushSome` added to it).
 #### Returns 
 
 The current length of the reservoir.
+
+## License
+
+````
+Copyright (C) 2012 Jon-Carlos Rivera
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+````
