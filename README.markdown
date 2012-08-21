@@ -70,17 +70,21 @@ As we said before, the object returned from Reservoir() is just an array *decora
 ### `Reservoir( reservoirSize = 1 [, randomNumberGenerator = Math.random] )`
 
 Parameters:
+
 `reservoirSize` is the maximum size of the reservoir. This is the number of elements to be randomly chosen from the input provided to it using `pushSome`.
 
 `randomNumberGenerator` is an optional random number generating function to use in place of the default `Math.random`. 
 
 Returns:
+
 An empty Reservoir (an Array with the function `pushSome` added to it).
 
 ### `reservoir.pushSome( datum[, datum...])`
 
 Parameters:
+
 `datum` one or more elements to consider for inclusion into the reservoir.
 
 Returns: 
+
 A number representing the current length of the reservoir.
