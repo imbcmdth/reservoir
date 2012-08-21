@@ -14,18 +14,54 @@
 		// We use the same constant specified in [Vitt85]
 		var switchToAlgorithmZConstant = 22;
 
+		// `debug` was used to test for correctness of the more complicated
+		// algorithms, X and Z, by comparing their results to R
+		var debug = "none";
+
 		function _Reservoir(reservoirSize, randomNumberGen) {
-			var targetArray = [];
 			var rng = randomNumberGen || Math.random;
+
+			// `reservoirSize` must be a number between 1 and 2^32
 			var reservoirSize =
-				Math.max(1, Math.floor(reservoirSize) || 1) >> 0;
-			var algorithmXCount = 0;
+				Math.max(1, (Math.floor(reservoirSize) >> 0) || 1);
+
+			// `totalItemCount` contains the total number of items 
+			// processed by `pushSome` against the reservoir
 			var totalItemCount = 0;
+
+			// `numToSkip` is the total number of elements to skip over
+			// before accepting one into the reservoir.
 			var numToSkip = -1;
+
+			// `currentAlgorithm` starts with algorithmX and switches to
+			// algorithmZ after `switchThreshold` items is reached
 			var currentAlgorithm = algorithmX;
+
+			// `switchThreshold` is the `totalItemCount` at which to switch
+			// over from algorithm X to Z
 			var switchThreshold = 
 				switchToAlgorithmZConstant * reservoirSize;
+
+			if(debug === "R") {
+				currentAlgorithm = algorithmR;
+			} else if(debug === "X") {
+				switchThreshold = Infinity;
+			} else if(debug === "Z") {
+				currentAlgorithm = algorithmZ;
+			}
+
+			// `algorithmXCount` is used in both X and Z and represents the
+			// number of items processed by algorithm X minus reservoirSize
+			var algorithmXCount = 0;
+
+			// `W` is used in algorithmZ
 			var W = Math.exp(-Math.log(rng()) / reservoirSize);
+
+			// `evictNext` is used only by algorithmR
+			var evictNext = null;
+
+			// `targetArray` is the array to be returned by Reservoir()
+			var targetArray = [];
 
 			targetArray.pushSome = function() {
 				this.length = Math.min(this.length, reservoirSize);
@@ -37,6 +73,8 @@
 				return this.length;
 			};
 
+			// `addSample` adds a single item at a time by using `numToSkip`
+			// to determine whether to include it in the reservoir
 			var addSample = function(sample) {
 				// Prefill the reservoir if it isn't full
 				if(totalItemCount < reservoirSize) {
@@ -54,36 +92,55 @@
 				return this;
 			};
 
-			function skipIterations(iterator) {
-				var sample;
-
-				do {
-					totalItemCount++;
-					sample = iterator();
-				} while(numToSkip-- > 0);
-				return sample;
-			}
-
-			function skipIterationsAndReplace(iterator, reservoir) {
-				var sample = skipIterations(iterator);
-				replaceRandomSample(sample, reservoir);
-			}
-
+			// `replaceRandomSample` selects a single value from `reservoir`
+			// for eviction and replaces it with `sample`
 			function replaceRandomSample(sample, reservoir) {
 				// Typically, the new sample replaces the "evicted" sample
 				// but below we remove the evicted sample and push the
 				// new value to ensure that reservoir is sorted in the
 				// same order as the input data (ie. iterator or array).
-				var randomIndex = Math.floor(rng() * reservoirSize);
+				var randomIndex;
+				if(evictNext !== null) {
+					randomIndex = evictNext;
+					evictNext = null;
+				} else {
+					randomIndex = Math.floor(rng() * reservoirSize);
+				}
 				reservoir.splice(randomIndex, 1);
 				reservoir.push(sample);
 			}
 
-			// From [Vitt85], "Algorithm X"
-			// Selects random elements from an unknown-length input with a
-			// time-complexity of:
+			// From [Vitt85], "Algorithm R"
+			// Selects random elements from an unknown-length input.
+			// Has a time-complexity of:
 			//   O(N)
+			// Number of random numbers required:
+			//   N - n
 			// Where:
+			//   n = the size of the reservoir
+			//   N = the size of the input
+			function algorithmR() {
+				var localItemCount = totalItemCount + 1,
+				    randomValue = Math.floor(rng() * localItemCount),
+				    toSkip = 0;
+
+				while (randomValue >= reservoirSize) {
+					toSkip++;
+					localItemCount++;
+					randomValue = Math.floor(rng() * localItemCount);
+				}
+				evictNext = randomValue;
+				return toSkip;
+			}
+
+			// From [Vitt85], "Algorithm X"
+			// Selects random elements from an unknown-length input.
+			// Has a time-complexity of:
+			//   O(N)
+			// Number of random numbers required:
+			//   2 * n * ln( N / n )
+			// Where:
+			//   n = the size of the reservoir
 			//   N = the size of the input
 			function algorithmX() {
 				var localItemCount = totalItemCount,
@@ -102,17 +159,19 @@
 						algorithmXCount++;
 						quotient = (quotient * algorithmXCount) / localItemCount;
 					}
+					return toSkip;
 				} else {
 					currentAlgorithm = algorithmZ;
 					return currentAlgorithm();
 				}
-				return toSkip;
 			}
 
 			// From [Vitt85], "Algorithm Z"
-			// Selects random elements from an unknown-length input with a
-			// time-complexity of:
+			// Selects random elements from an unknown-length input.
+			// Has a time-complexity of:
 			//   O(n(1 + log (N / n)))
+			// Number of random numbers required:
+			//   2 * n * ln( N / n )
 			// Where:
 			//   n = the size of the reservoir
 			//   N = the size of the input
@@ -140,22 +199,22 @@
 
 					var y = (((randomValue * (totalItemCount + 1)) / term) * (totalItemCount + toSkip + 1)) / (totalItemCount + x);
 
-					if(algorithmXCount < toSkip) {
+					if(reservoirSize < toSkip) {
 						denom = totalItemCount;
 						numer_lim = term + toSkip;
 					} else {
-						denom = totalItemCount - algorithmXCount + toSkip;
+						denom = totalItemCount - reservoirSize + toSkip;
 						numer_lim = totalItemCount + 1;
 					}
 
-					for(numer = totalItemCount + toSkip; numer > numer_lim; numer --) {
+					for(numer = totalItemCount + toSkip; numer >= numer_lim; numer--) {
 						y = (y * numer) / denom;
 						denom--;
 					}
 
 					W = Math.exp(-Math.log(rng()) / reservoirSize);
 
-					if(Math.exp(Math.log(y) / reservoirSize) <= (totalItemCount + toSkip)) {
+					if(Math.exp(Math.log(y) / reservoirSize) <= (totalItemCount + x) / totalItemCount) {
 						break;
 					}
 				}
