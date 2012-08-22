@@ -30,7 +30,7 @@ For the *browser*, add the following to your pages:
 ...Or using AMD in the browser:
 
 ````javascript
-require(["reservoir/reservoir"], function(Reservoir) {
+require(["reservoir"], function(Reservoir) {
 	// ...
 });
 ````
